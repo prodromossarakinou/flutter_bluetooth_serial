@@ -601,19 +601,24 @@ public class FlutterBluetoothSerialPlugin implements FlutterPlugin, ActivityAwar
                     break;
 
                 case "requestEnable":
-                    if (!bluetoothAdapter.isEnabled()) {
+                    if (bluetoothAdapter.isEnabled()) {
+                        result.success(true);
+                    }
+
+                    pendingResultForActivityResult = result;
+                    Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+
+                    if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.S) {
+                        ActivityCompat.startActivityForResult(activity, intent, REQUEST_ENABLE_BLUETOOTH, null);
+                    } else {
                         ensurePermissions(granted -> {
                             if (!granted) {
-                                result.error("no_permissions", "enabling bluetooth requires location access permission", null);
+                                result.error("no_permissions", "enabling bluetooth requires BLUETOOTH_CONNECT permission", null);
                                 return;
                             }
 
-                            pendingResultForActivityResult = result;
-                            Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                             ActivityCompat.startActivityForResult(activity, intent, REQUEST_ENABLE_BLUETOOTH, null);
                         });
-                    } else {
-                        result.success(true);
                     }
                     break;
 

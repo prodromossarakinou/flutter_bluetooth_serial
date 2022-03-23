@@ -600,7 +600,7 @@ public class FlutterBluetoothSerialPlugin implements FlutterPlugin, ActivityAwar
                     result.success(null);
                     break;
 
-                case "requestEnable":
+                case "requestEnable": {
                     if (bluetoothAdapter.isEnabled()) {
                         result.success(true);
                     }
@@ -621,6 +621,7 @@ public class FlutterBluetoothSerialPlugin implements FlutterPlugin, ActivityAwar
                         });
                     }
                     break;
+                }
 
                 case "requestDisable":
                     if (bluetoothAdapter.isEnabled()) {

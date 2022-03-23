@@ -70,10 +70,10 @@ public class FlutterBluetoothSerialPlugin implements FlutterPlugin, ActivityAwar
     private final BroadcastReceiver discoveryReceiver;
 
     // Connections
-    /// Contains all active connections. Maps ID of the connection with plugin data channels. 
+    /// Contains all active connections. Maps ID of the connection with plugin data channels.
     private final SparseArray<BluetoothConnectionWrapper> connections = new SparseArray<>(2);
 
-    /// Last ID given to any connection, used to avoid duplicate IDs 
+    /// Last ID given to any connection, used to avoid duplicate IDs
     private int lastConnectionId = 0;
     private Activity activity;
     private BinaryMessenger messenger;
@@ -602,9 +602,16 @@ public class FlutterBluetoothSerialPlugin implements FlutterPlugin, ActivityAwar
 
                 case "requestEnable":
                     if (!bluetoothAdapter.isEnabled()) {
-                        pendingResultForActivityResult = result;
-                        Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                        ActivityCompat.startActivityForResult(activity, intent, REQUEST_ENABLE_BLUETOOTH, null);
+                        ensurePermissions(granted -> {
+                            if (!granted) {
+                                result.error("no_permissions", "enabling bluetooth requires location access permission", null);
+                                return;
+                            }
+
+                            pendingResultForActivityResult = result;
+                            Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                            ActivityCompat.startActivityForResult(activity, intent, REQUEST_ENABLE_BLUETOOTH, null);
+                        });
                     } else {
                         result.success(true);
                     }

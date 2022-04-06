@@ -40,6 +40,10 @@ class FlutterBluetoothSerial {
   @Deprecated('Use `isEnabled` instead')
   Future<bool?> get isOn async => await _methodChannel.invokeMethod('isOn');
 
+  /// Ensures that the required bluetooth permissions are requested.
+  Future<bool?> get ensurePermissions async =>
+      await _methodChannel.invokeMethod('ensurePermissions');
+
   static final EventChannel _stateChannel =
       const EventChannel('$namespace/state');
 

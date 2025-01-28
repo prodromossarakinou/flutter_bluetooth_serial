@@ -3,26 +3,32 @@ version '1.0-SNAPSHOT'
 buildscript {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.0'
+        classpath 'com.android.tools.build:gradle:8.2.2'
     }
 }
 rootProject.allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 }
 apply plugin: 'com.android.library'
 android {
-    compileSdkVersion 31
+    compileSdkVersion 34
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    lintOptions {
+        disable 'InvalidPackage'
+        checkReleaseBuilds false
+    }
+
     defaultConfig {
         minSdkVersion 19
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -31,9 +37,15 @@ android {
         disable 'InvalidPackage'
     }
     dependencies {
-        implementation 'androidx.appcompat:appcompat:1.3.0'
+        implementation 'androidx.appcompat:appcompat:1.7.0'
     }
     buildToolsVersion '30.0.3'
+
+    namespace 'io.github.edufolly.flutterbluetoothserial'
+    lint {
+        checkReleaseBuilds false
+        disable 'InvalidPackage'
+    }
 }
 
 dependencies {
